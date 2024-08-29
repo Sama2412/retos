@@ -21,10 +21,16 @@ jobs:
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
         az bicep install
 
+    - name: Print parameters for debugging
+      run: |
+        echo "Resource Group: ${{ secrets.AZURE_RESOURCE_GROUP }}"
+        echo "Subscription ID: ${{ secrets.AZURE_SUBSCRIPTION }}"
+        echo "Name Prefix: ${{ secrets.NAME_PREFIX }}"
+
     - name: Deploy Bicep template
       run: |
         az deployment group create \
           --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-          --template-file path/to/your/template.bicep \
+          --template-file config/main.bicep \
           --parameters namePrefix=${{ secrets.NAME_PREFIX }} \
           --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
