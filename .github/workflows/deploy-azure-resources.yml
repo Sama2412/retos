@@ -1,36 +1,24 @@
-name: Deploy Azure Resources
-
-on:
-  workflow_dispatch:
-
+name: Create Azure resources
+on: [workflow_dispatch]
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v2
 
-    - name: Log in to Azure CLI
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # Checkout code
+      - uses: actions/checkout@main
 
-    - name: Install Azure CLI and Bicep
-      run: |
-        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-        az bicep install
+      # Log into Azure
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Print parameters for debugging
-      run: |
-        echo "Resource Group: ${{ secrets.AZURE_RG }}"
-        echo "Subscription ID: ${{ secrets.AZURE_SUBSCRIPTION }}"
-        echo "Name Prefix: ${{ vars.AZURE_PREFIX }}"
-
-    - name: Deploy Bicep template
-      run: |
-        az deployment group create \
-          --resource-group ${{ secrets.AZURE_RG }} \
-          --template-file config/main.bicep \
-          --parameters namePrefix=${{ vars.AZURE_PREFIX }} \
-          --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
+      # Deploy Bicep file
+      - name: create resources
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ vars.AZURE_RG }}
+          template: ${{ github.workspace }}/config/main.bicep
+          parameters: 'namePrefix=${{ vars.AZURE_PREFIX }}'
+          failOnStdErr: false
