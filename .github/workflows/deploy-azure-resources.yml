@@ -26,4 +26,5 @@ jobs:
         az deployment group create \
           --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
           --template-file path/to/your/template.bicep \
-          --parameters namePrefix=${{ secrets.NAME_PREFIX }}
+          --parameters namePrefix=${{ secrets.NAME_PREFIX }} \
+          --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
