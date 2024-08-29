@@ -1,4 +1,4 @@
-name: Create Azure Resources
+name: Deploy Azure Resources
 
 on:
   workflow_dispatch:
@@ -23,14 +23,14 @@ jobs:
 
     - name: Print parameters for debugging
       run: |
-        echo "Resource Group: ${{ secrets.AZURE_RESOURCE_GROUP }}"
+        echo "Resource Group: ${{ secrets.AZURE_RG }}"
         echo "Subscription ID: ${{ secrets.AZURE_SUBSCRIPTION }}"
-        echo "Name Prefix: ${{ secrets.NAME_PREFIX }}"
+        echo "Name Prefix: ${{ vars.AZURE_PREFIX }}"
 
     - name: Deploy Bicep template
       run: |
         az deployment group create \
-          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --resource-group ${{ secrets.AZURE_RG }} \
           --template-file config/main.bicep \
-          --parameters namePrefix=${{ secrets.NAME_PREFIX }} \
+          --parameters namePrefix=${{ vars.AZURE_PREFIX }} \
           --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
