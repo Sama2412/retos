@@ -10,3 +10,14 @@ updates:
    directory: "/"
    schedule:
      interval: weekly
+=======
+version: 2
+updates:
+  - package-ecosystem: "npm" # Especifica el ecosistema de paquetes (por ejemplo, npm, pip, maven, etc.)
+    directory: "/" # La ubicación del archivo package.json en el directorio raíz
+    schedule:
+      interval: "weekly" # Dependabot verificará actualizaciones semanalmente
+  - package-ecosystem: "pip" # Para un proyecto Python
+    directory: "/path/to/your/python/project" # Ruta al directorio donde está el archivo requirements.txt
+    schedule:
+      interval: "weekly" # Dependabot verificará actualizaciones semanalmente
